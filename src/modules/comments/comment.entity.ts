@@ -15,4 +15,5 @@ export class Comment {
 
   @ManyToOne(type => Task, task => task.comments)
   task: Task;
+
 }
