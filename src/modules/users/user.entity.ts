@@ -47,10 +47,10 @@ export class User {
   @IsNotEmpty()
   password: string;
 
-  @Column({ type: 'string', default: Role.User })
+  @Column({ default: Role.User })
   role: Role;
 
-  @Column({ type: 'string', default: Status.NotConfirmed })
+  @Column({ default: Status.NotConfirmed })
   status: Status;
 
   @OneToMany(type => Comment, comment => comment.user)

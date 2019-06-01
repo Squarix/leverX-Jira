@@ -1,8 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinTable} from "typeorm";
+import {Entity, ManyToMany, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinTable} from "typeorm";
 import { User } from "../users/user.entity";
 import {Task} from "../tasks/task.entity";
 import {IsNotEmpty} from "class-validator";
-import {ManyToMany} from "typeorm/browser";
 
 @Entity()
 export class Project {
