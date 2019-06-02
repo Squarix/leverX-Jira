@@ -3,17 +3,7 @@ import { Project } from "../projects/project.entity";
 import { Task }    from "../tasks/task.entity";
 import { Comment } from "../comments/comment.entity";
 import { IsDate, IsEmail, IsNotEmpty, MaxLength} from "class-validator";
-
-enum Status {
-  Confirmed = 'confirmed',
-  NotConfirmed = 'notConfirmed',
-  Banned = 'banned'
-}
-
-enum Role {
-  Admin = 'admin',
-  User  = 'user'
-}
+import { Role, Status } from "./enum";
 
 @Entity()
 export class User {
@@ -47,10 +37,10 @@ export class User {
   @IsNotEmpty()
   password: string;
 
-  @Column({ default: Role.User })
+  @Column({ default: Role.USER })
   role: Role;
 
-  @Column({ default: Status.NotConfirmed })
+  @Column({ default: Status.NOTCONFIRMED })
   status: Status;
 
   @OneToMany(type => Comment, comment => comment.user)
