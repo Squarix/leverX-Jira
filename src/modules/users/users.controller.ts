@@ -33,4 +33,5 @@ export class UsersController {
   async delete(@Param('id') id) {
     return this.userService.delete({id: id})
   }
+
 }
