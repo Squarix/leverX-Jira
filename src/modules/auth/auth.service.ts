@@ -57,5 +57,4 @@ export class AuthService {
       access_token: await sign(user, secretOrKey, { expiresIn })
     }
   }
-
 }

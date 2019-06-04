@@ -1,0 +1,13 @@
+{{> header }}
+<form method="post" action="/projects/new">
+    <div class="form-group">
+        <label for="name">Project name:</label>
+        <input id="name" class="form-control" name="name" placeholder="Name your project">
+    </div>
+    <div class="form-group">
+        <label for="image"></label>
+        <input type="file" name="image" id="image" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{{> footer }}

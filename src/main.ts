@@ -3,6 +3,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import {join} from "path";
 import * as bodyParser from "body-parser";
+import * as hbs from "hbs";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -13,6 +14,8 @@ async function bootstrap() {
   app.setViewEngine('hbs');
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, 'modules'));
+
+  hbs.registerPartials(join(__dirname, '..', 'views', 'layouts'));
 
   await app.listen(3000);
 

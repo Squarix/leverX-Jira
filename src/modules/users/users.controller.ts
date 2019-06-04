@@ -21,7 +21,7 @@ export class UsersController {
 
   @Get('/:id')
   async findOne(@Param('id') id): Promise<User> {
-    return this.userService.findOne({_id: id})
+    return this.userService.findOne({id: id})
   }
 
   @Put('/:id')
@@ -31,6 +31,6 @@ export class UsersController {
 
   @Delete('/:id')
   async delete(@Param('id') id) {
-    return this.userService.delete({_id: id})
+    return this.userService.delete({id: id})
   }
 }

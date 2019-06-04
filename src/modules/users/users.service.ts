@@ -37,7 +37,7 @@ export class UsersService {
   }
 
   public async update(id: string, payload: LoginUserDto) {
-    return await this.findOne({_id: id })
+    return await this.findOne({id: id })
       .then(
         async user => {
           user.email = payload.email;
