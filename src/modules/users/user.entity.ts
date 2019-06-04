@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, Unique} from "typeorm";
 import { Project } from "../projects/project.entity";
 import { Task }    from "../tasks/task.entity";
 import { Comment } from "../comments/comment.entity";
@@ -6,6 +6,7 @@ import { IsDate, IsEmail, IsNotEmpty, MaxLength} from "class-validator";
 import { Role, Status } from "./enum";
 
 @Entity()
+@Unique('UQ-EMAIL', ['email'])
 export class User {
 
   @PrimaryGeneratedColumn()
@@ -14,22 +15,14 @@ export class User {
   @Column({ length: 50 })
   @IsNotEmpty()
   @MaxLength(50)
-  firstName: string;
-
-  @Column({ length: 50 })
-  @IsNotEmpty()
-  @MaxLength(50)
-  lastName: string;
-
-  @Column('text')
-  description: string;
+  name: string;
 
   @Column()
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
-  @Column()
+  @Column({ default: new Date() })
   @IsDate()
   createDate: Date;
 

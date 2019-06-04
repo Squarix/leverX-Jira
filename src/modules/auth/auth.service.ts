@@ -1,19 +1,23 @@
 import { sign } from 'jsonwebtoken';
-import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import {Injectable, Inject, UnauthorizedException, Res} from '@nestjs/common';
 import { UsersService } from '../users/users.service'
-import { CreateUserDto } from '../users/dto/create-user.dto';
+import { LoginUserDto } from '../users/dto/login-user.dto';
 import { Role, Status } from '../users/enum';
 import { CryptographerService } from './cryptographer.service';
+import {User} from "../users/user.entity";
+import {CreateUserDto} from "../users/dto/create-user.dto";
 
 @Injectable()
 export class AuthService {
 
-  constructor( 
-    private readonly userService: UsersService,
-    private readonly cryptoService: CryptographerService
+  constructor(
+    private readonly cryptoService: CryptographerService,
+    private readonly userService: UsersService
   ){}
   
-  public async signUp(user: CreateUserDto) {
+  public async signUp(cuser: CreateUserDto) {
+    let user: User = Object.assign(new User(), cuser);
+    console.log(user);
     user.password = await this.cryptoService.hashPassword(user.password);
     user.role = Role.USER;
     user.status = Status.NOTCONFIRMED;
@@ -41,7 +45,7 @@ export class AuthService {
   }
 
   public async createToken(signedUser) {
-    const expiresIn = process.env.JWT_EXPIRATION, secretOrKey = process.env.SECRET_KEY;
+    const expiresIn = '10000', secretOrKey = 'privetYaSecretKeyNaJire';
     const user = { 
       sub: signedUser._id,
       email: signedUser.email,

@@ -6,8 +6,10 @@ import { Connection } from 'typeorm';
 import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
 
+
 @Module({
   imports: [
+    AuthModule, UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -15,9 +17,9 @@ import { AuthModule } from "./modules/auth/auth.module";
       username: 'squarix',
       password: '123456',
       database: 'jira_development',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true
-    }), AuthModule, UsersModule
+      entities: [ __dirname + '/**/*.entity{.ts,.js}' ],
+      synchronize: true,
+    })
   ],
   controllers: [AppController],
   providers: [AppService],

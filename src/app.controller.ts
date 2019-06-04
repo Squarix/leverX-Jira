@@ -11,9 +11,4 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('users')
-  @UseGuards(AuthGuard())
-  findAll() {
-    return [];
-  }
 }

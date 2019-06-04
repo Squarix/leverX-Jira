@@ -1,19 +1,20 @@
 import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
 import { User } from './user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { CryptographerService } from '../auth/cryptographer.service';
-import { getRepository } from "typeorm";
+import { Connection } from "typeorm";
 
 @Injectable()
 export class UsersService {
 
   constructor(
     private readonly cryptoService: CryptographerService,
+    private readonly connection: Connection
   ){}
 
-  private readonly userRepository = getRepository(User);
+  private readonly userRepository = this.connection.getRepository(User);
 
-  public async create(user: CreateUserDto) {
+  public async create(user: User) {
     return this.userRepository.save(user)
       .then(user => Promise.resolve(user))
       .catch(err =>
@@ -35,11 +36,10 @@ export class UsersService {
       .catch(err => Promise.reject(new NotFoundException(err)))
   }
 
-  public async update(id: string, payload: CreateUserDto) {
+  public async update(id: string, payload: LoginUserDto) {
     return await this.findOne({_id: id })
       .then(
         async user => {
-          user.name = payload.name;
           user.email = payload.email;
           //put this in a pre-save hook if you use Mongoose or BeforeInsert if use TypeOrm
           user.password = (await this.cryptoService.checkPassword(user.password, payload.password))
