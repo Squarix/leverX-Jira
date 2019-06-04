@@ -1,21 +1,12 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, Unique} from "typeorm";
 import { Project } from "../projects/project.entity";
 import { Task }    from "../tasks/task.entity";
 import { Comment } from "../comments/comment.entity";
 import { IsDate, IsEmail, IsNotEmpty, MaxLength} from "class-validator";
-
-enum Status {
-  Confirmed = 'confirmed',
-  NotConfirmed = 'notConfirmed',
-  Banned = 'banned'
-}
-
-enum Role {
-  Admin = 'admin',
-  User  = 'user'
-}
+import { Role, Status } from "./enum";
 
 @Entity()
+@Unique('UQ-EMAIL', ['email'])
 export class User {
 
   @PrimaryGeneratedColumn()
@@ -24,22 +15,14 @@ export class User {
   @Column({ length: 50 })
   @IsNotEmpty()
   @MaxLength(50)
-  firstName: string;
-
-  @Column({ length: 50 })
-  @IsNotEmpty()
-  @MaxLength(50)
-  lastName: string;
-
-  @Column('text')
-  description: string;
+  name: string;
 
   @Column()
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
-  @Column()
+  @Column({ default: new Date() })
   @IsDate()
   createDate: Date;
 
@@ -47,10 +30,10 @@ export class User {
   @IsNotEmpty()
   password: string;
 
-  @Column({ type: 'string', default: Role.User })
+  @Column({ default: Role.USER })
   role: Role;
 
-  @Column({ type: 'string', default: Status.NotConfirmed })
+  @Column({ default: Status.NOTCONFIRMED })
   status: Status;
 
   @OneToMany(type => Comment, comment => comment.user)

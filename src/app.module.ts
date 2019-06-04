@@ -3,19 +3,23 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
+import { UsersModule } from "./modules/users/users.module";
+import { AuthModule } from "./modules/auth/auth.module";
+
 
 @Module({
   imports: [
+    AuthModule, UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
       port: 5432,
-      username: 'root',
-      password: 'root',
+      username: 'squarix',
+      password: '123456',
       database: 'jira_development',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true
-    }),
+      entities: [ __dirname + '/**/*.entity{.ts,.js}' ],
+      synchronize: true,
+    })
   ],
   controllers: [AppController],
   providers: [AppService],
