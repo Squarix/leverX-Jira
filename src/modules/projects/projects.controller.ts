@@ -3,7 +3,7 @@ import {
   Controller, Delete,
   Get,
   Param,
-  Post,
+  Post, Put,
   Render,
   UploadedFile,
   UseInterceptors,
@@ -47,20 +47,20 @@ export class ProjectsController {
   }
 
 
-  @Get('/')
-  public async myProjects() {
-    let id = 15;
-    return { projects: await this.projectService.myProjects(id) };
-  }
-
   @Get('/:id')
+  @Render('projects/views/show')
   public async show(@Param('id') id: number) {
     return { project: await this.projectService.findOne({id: id}) };
   }
 
   @Delete('/:id')
   public async delete(@Param('id') id: number) {
-    this.projectService.delete(id);
+    return this.projectService.delete(id);
+  }
+
+  @Put('/:id')
+  public async update() {
+
   }
 
 }

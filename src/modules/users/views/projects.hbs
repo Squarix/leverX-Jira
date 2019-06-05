@@ -1,0 +1,16 @@
+{{> header }}
+{{#each projects as |project| }}
+    <div class="media text-muted pt-3">
+        <img data-src="{{image}}" alt="32x32" class="mr-2 rounded" data-holder-rendered="true" style="width: 32px; height: 32px;">
+        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark">
+                <a href="/projects/{{project.id}}"> {{ project.name }} </a>
+            </strong>
+            Тут типо дескриптион
+        </p>
+    </div>
+    {{#if this.owner}}
+        <div>BUTTTONS</div>
+    {{/if}}
+{{/each}}
+{{> footer}}

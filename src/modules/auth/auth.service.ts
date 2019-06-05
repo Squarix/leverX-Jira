@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   public async createToken(signedUser) {
-    const expiresIn = '10000', secretOrKey = 'privetYaSecretKeyNaJire';
+    const expiresIn = 60*60*24*62, secretOrKey = 'privetYaSecretKeyNaJire';
     const user = { 
       sub: signedUser._id,
       email: signedUser.email,

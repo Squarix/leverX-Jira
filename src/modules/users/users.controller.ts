@@ -31,7 +31,21 @@ export class UsersController {
 
   @Delete('/:id')
   async delete(@Param('id') id) {
-    return this.userService.delete({id: id})
+    return this.userService.delete({id  : id})
+  }
+
+  @Get('/:id/projects')
+  @Render('users/views/projects')
+  async projects() {
+    let user_id = 7;
+    return { projects: await this.userService.myProjects(user_id) };
+  }
+
+  @Get('/:id/own-projects')
+  @Render('users/views/projects')
+  async ownProjects() {
+    let uid = 7;
+    return { projects: await this.userService.ownerProjects(uid), owner: true};
   }
 
 }

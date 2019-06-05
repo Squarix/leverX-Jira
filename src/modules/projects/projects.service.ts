@@ -11,8 +11,9 @@ export class ProjectsService {
   private readonly userRepository = this.connection.getRepository(User);
 
   public async findOne(params): Promise<any> {
-    return await this.projectRepository.findOne(params)
+    return await this.projectRepository.findOne(params, {relations: ['tasks', 'users', 'owner']})
       .then(project => {
+        console.log(project);
         return (project)
           ? Promise.resolve(project)
           : Promise.reject('Project not exist')
@@ -32,10 +33,6 @@ export class ProjectsService {
       )
   }
 
-  public async myProjects(id: number): Promise<any> {
-    return await this.userRepository.findOne({id: id})
-      .then(user => Promise.resolve(user.projects));
-  }
 
   public async update(project: Project) {
     return await this.projectRepository.update({id: project.id}, project);
