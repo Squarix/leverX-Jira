@@ -5,9 +5,11 @@
         <div class="card" style="width: 18rem;">
             <div class="card-header">Open</div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Vestibulum at eros</li>
+                {{#each openTasks as |task|}}
+                <li class="list-group-item">
+                    <a href="/tasks/{{task.id}}">{{ task.title }}</a>
+                </li>
+                {{/each}}
             </ul>
         </div>
     </div>
@@ -16,9 +18,11 @@
         <div class="card" style="width: 18rem;">
             <div class="card-header">In progress</div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Vestibulum at eros</li>
+                {{#each pendingTasks as |task|}}
+                    <li class="list-group-item">
+                        <a href="/tasks/{{task.id}}">{{ task.title }}</a>
+                    </li>
+                {{/each}}
             </ul>
         </div>
     </div>
@@ -26,11 +30,14 @@
         <div class="card" style="width: 18rem;">
             <div class="card-header">Finished</div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Vestibulum at eros</li>
+                {{#each closedTasks as |task|}}
+                    <li class="list-group-item">
+                        <a href="/tasks/{{task.id}}">{{ task.title }}</a>
+                    </li>
+                {{/each}}
             </ul>
         </div>
     </div>
 </div>
+<script src="/js/tasks.js"></script>
 {{> footer}}

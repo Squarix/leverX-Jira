@@ -4,9 +4,9 @@ import {Task} from "./task.entity";
 export class TasksService {
   constructor(private readonly connection: Connection) {}
 
-  private readonly taskRepository = this.connection.getRepository(Task);
+  //private readonly taskRepository = this.connection.getRepository(Task);
 
   public async findOne(id: number): Promise<any> {
-    return this.taskRepository.findOne(id);
+    //return this.taskRepository.findOne(id);
   }
 }

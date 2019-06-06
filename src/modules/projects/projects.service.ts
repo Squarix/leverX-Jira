@@ -13,7 +13,6 @@ export class ProjectsService {
   public async findOne(params): Promise<any> {
     return await this.projectRepository.findOne(params, {relations: ['tasks', 'users', 'owner']})
       .then(project => {
-        console.log(project);
         return (project)
           ? Promise.resolve(project)
           : Promise.reject('Project not exist')

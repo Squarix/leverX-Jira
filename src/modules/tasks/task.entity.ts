@@ -4,7 +4,7 @@ import { User } from "../users/user.entity";
 import { Project } from "../projects/project.entity";
 import { Comment} from "../comments/comment.entity";
 
-enum Status {
+export enum Status {
   Open = 'open',
   Closed = 'closed',
   Active = 'active'

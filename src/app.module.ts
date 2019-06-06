@@ -6,11 +6,12 @@ import { Connection } from 'typeorm';
 import { UsersModule } from "./modules/users/users.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import {ProjectsModule} from "./modules/projects/projects.module";
+import {TasksModule} from "./modules/tasks/tasks.module";
 
 
 @Module({
   imports: [
-    AuthModule, UsersModule, ProjectsModule,
+    AuthModule, UsersModule, ProjectsModule, TasksModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',

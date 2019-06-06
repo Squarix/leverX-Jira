@@ -1,19 +1,21 @@
 import {
   Body,
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
   Param,
-  Post, Put,
+  Post,
+  Put,
   Render,
   UploadedFile,
   UseInterceptors,
   ValidationPipe
 } from "@nestjs/common";
-import { Project } from "./project.entity";
-import { ProjectsService } from "./projects.service";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { diskStorage } from "multer";
-import {constructExclusionsMap} from "tslint/lib/rules/completed-docs/exclusions";
+import {Project} from "./project.entity";
+import {ProjectsService} from "./projects.service";
+import {Status} from "../tasks/task.entity";
+import {FileInterceptor} from "@nestjs/platform-express";
+import {diskStorage} from "multer";
 import {extname} from "path";
 
 @Controller('projects')
@@ -50,7 +52,12 @@ export class ProjectsController {
   @Get('/:id')
   @Render('projects/views/show')
   public async show(@Param('id') id: number) {
-    return { project: await this.projectService.findOne({id: id}) };
+    let project:Project = await this.projectService.findOne({id: id});
+    return { project: project,
+      openTasks: project.tasks.filter(t => t.status == Status.Open),
+      pendingTasks: project.tasks.filter(t => t.status == Status.Active),
+      closedTasks: project.tasks.filter(t => t.status == Status.Closed)
+    };
   }
 
   @Delete('/:id')
