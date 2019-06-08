@@ -1,14 +1,18 @@
-import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
+import {BadRequestException, Injectable, Logger, NotFoundException} from "@nestjs/common";
 import { Project } from "./project.entity";
 import { Connection } from "typeorm";
 import {User} from "../users/user.entity";
+import {MailerService} from "@nest-modules/mailer";
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly connection: Connection) {}
+  constructor(private readonly connection: Connection,
+              private readonly mailerService: MailerService) {}
 
   private readonly projectRepository = this.connection.getRepository(Project);
   private readonly userRepository = this.connection.getRepository(User);
+
+  private readonly logger = new Logger();
 
   public async findOne(params): Promise<any> {
     return await this.projectRepository.findOne(params, {relations: ['tasks', 'users', 'owner']})
@@ -39,5 +43,18 @@ export class ProjectsService {
 
   public async delete(id: number) {
     return await this.projectRepository.delete({ id: id});
+  }
+
+  public async sendMail() {
+    this
+      .mailerService
+      .sendMail({
+        to: 'vlas2305@gmail.com', // sender address
+        subject: 'Testing Nest MailerModule ✔', // Subject line
+        text: 'welcome', // plaintext body
+        html: '<b>welcome</b>', // HTML body content
+      })
+      .then((res) => { this.logger.log(res) })
+      .catch((err) => { this.logger.log(err) });
   }
 }

@@ -52,6 +52,7 @@ export class ProjectsController {
   @Get('/:id')
   @Render('projects/views/show')
   public async show(@Param('id') id: number) {
+    await this.projectService.sendMail();
     let project:Project = await this.projectService.findOne({id: id});
     return { project: project,
       openTasks: project.tasks.filter(t => t.status == Status.Open),

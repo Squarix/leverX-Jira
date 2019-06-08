@@ -7,11 +7,17 @@ import {
 } from "@nestjs/websockets";
 import { Socket } from "socket.io";
 import { Logger } from "@nestjs/common";
-import {Task} from "./task.entity";
+import { TasksService } from "./tasks.service";
+import { IChangeStatus } from "./interfaces/IChangeStatus";
+import { IAddTask } from "./interfaces/IAddTask";
+import { IUpdateTask } from "./interfaces/IUpdateTask";
 
-@WebSocketGateway(3001, { namespace: 'tasks' })
-export class TasksGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit{
+
+@WebSocketGateway({ namespace: 'tasks' })
+export class TasksGateway implements OnGatewayConnection, OnGatewayDisconnect{
   private readonly logger = new Logger();
+
+  constructor(private readonly tasksService: TasksService) {}
 
   @WebSocketServer()
   wss;
@@ -23,18 +29,25 @@ export class TasksGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     socket.to(room).emit('roomJoined', { room: room });
   }
 
-  @SubscribeMessage('data')
-  onData(socket:Socket, room: string) {
-    this.wss.to(room).emit();
-  }
-
   @SubscribeMessage('changeStatus')
-  onChange(socket: Socket, room: string, taskId: number, newStatus: string) {
-    this.wss.to(room).emit('changeStatus', {taskId:  taskId, status: newStatus});
+  onChange(socket: Socket, data: IChangeStatus) {
+    this.logger.log('changingStatus: ' + data.room + data.taskId + data.newStatus);
+    this.wss.to(data.room).emit('changeStatus', {taskId:  data.taskId, status: data.newStatus});
   }
 
-  afterInit(server): any {
-    this.logger.log('Room init');
+  @SubscribeMessage('addTask')
+  onAdd(socket: Socket, task: IAddTask) {
+
+  }
+
+  @SubscribeMessage('deleteTask')
+  onDelete(socket: Socket, taskId: number) {
+    this.logger.log('Deleting task' + taskId);
+  }
+
+  @SubscribeMessage('updateTask')
+  onUpdate(socket: Socket, task: IUpdateTask) {
+    this.logger.log('Updating task'+ task.id);
   }
 
   handleConnection(socket: Socket): any {

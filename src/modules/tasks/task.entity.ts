@@ -26,9 +26,6 @@ export class Task {
   @Column()
   status: Status;
 
-  @OneToMany(type => Comment, comment => comment.user)
-  comments: Comment[];
-
   @ManyToOne(type => User, user => user.tasks)
   user: User;
 
