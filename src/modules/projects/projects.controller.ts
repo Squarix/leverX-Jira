@@ -7,7 +7,7 @@ import {
   Post,
   Put,
   Render,
-  UploadedFile,
+  UploadedFile, UseGuards,
   UseInterceptors,
   ValidationPipe
 } from "@nestjs/common";
@@ -17,12 +17,14 @@ import {Status} from "../tasks/task.entity";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
 import {extname} from "path";
+import {AuthGuard} from "@nestjs/passport";
 
 @Controller('projects')
 export class ProjectsController {
   constructor( private readonly projectService:ProjectsService) {}
 
   @Get('/new')
+  @UseGuards(AuthGuard('local'))
   @Render('projects/views/new')
   public async new() {
     return {

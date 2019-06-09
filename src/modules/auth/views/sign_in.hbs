@@ -1,0 +1,20 @@
+{{> header}}
+<div class="mt-5 mx-auto">
+    <form method="post" target="/login">
+        <h3 align="center">SIGN IN</h3>
+        <div class="row w-50 mx-auto">
+            <div class="mb-3 col-12">
+                <label for="email">Email:</label>
+                <input class="form-control" type="email" name="email"  />
+            </div>
+            <div class="mb-3 col-12">
+                <label for="pass">Password:</label>
+                <input class="form-control" type="password" id="pass" name="password" />
+            </div>
+            <div class="mb-3 col-12">
+                <input class="btn btn-primary btn-lg btn-block" type="submit" value="Continue">
+            </div>
+        </div>
+    </form>
+</div>
+{{> footer}}

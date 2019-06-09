@@ -3,6 +3,8 @@ import { Project } from "./project.entity";
 import { Connection } from "typeorm";
 import {User} from "../users/user.entity";
 import {MailerService} from "@nest-modules/mailer";
+import {RedisService} from "nestjs-redis";
+import {RedisClient} from "nestjs-redis/dist/redis-client.provider";
 
 @Injectable()
 export class ProjectsService {
@@ -46,7 +48,23 @@ export class ProjectsService {
   }
 
   public async sendMail() {
-    this
+//    let client = this.redisService.getClient();
+
+  //  this.redisService.getClient('new');
+
+    //client.hset('hkey', 'ht1', 123);
+    //client.hset('hkey', 'ht2', 321);
+
+    //client.hkeys('hkey', (err, replies) => {
+      //console.log(replies.length + " replies:");
+      //replies.forEach(function (reply, i) {
+       // console.log("    " + i + ": " + reply + reply.value);
+      //});
+      //client.quit();
+    //});
+
+
+    /*this
       .mailerService
       .sendMail({
         to: 'vlas2305@gmail.com', // sender address
@@ -55,6 +73,6 @@ export class ProjectsService {
         html: '<b>welcome</b>', // HTML body content
       })
       .then((res) => { this.logger.log(res) })
-      .catch((err) => { this.logger.log(err) });
+      .catch((err) => { this.logger.log(err) });*/
   }
 }

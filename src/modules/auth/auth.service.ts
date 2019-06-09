@@ -39,7 +39,7 @@ export class AuthService {
   }
   
   public async verify(payload) {
-    return await this.userService.findOne({_id: payload.sub})
+    return await this.userService.findOne({id: payload.sub})
     .then(signedUser => Promise.resolve(signedUser))
     .catch(err => Promise.reject(new UnauthorizedException("Invalid Authorization")))
   }

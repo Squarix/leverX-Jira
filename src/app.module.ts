@@ -9,7 +9,7 @@ import { ProjectsModule } from "./modules/projects/projects.module";
 import { TasksModule } from "./modules/tasks/tasks.module";
 import { HandlebarsAdapter, MailerModule } from "@nest-modules/mailer";
 import {join} from "path";
-
+import {RedisModule} from "nestjs-redis";
 
 
 @Module({
@@ -38,6 +38,7 @@ import {join} from "path";
         },
       },
     }),
+    RedisModule.register({})
   ],
   controllers: [AppController],
   providers: [AppService],

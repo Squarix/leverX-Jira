@@ -3,6 +3,10 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import {join} from "path";
 import * as bodyParser from "body-parser";
+import JWTRedisSession = require("jwt-redis-session");
+import Redis = require("redis");
+
+"redis";
 import * as hbs from "hbs";
 
 async function bootstrap() {
@@ -10,6 +14,19 @@ async function bootstrap() {
 
   app.use(bodyParser.json({limit: '10mb'}));
   app.use (bodyParser.urlencoded({limit: '10mb', extended: true}));
+
+
+  // redis -- jwt
+  let redisClient = Redis.createClient();
+  app.use(JWTRedisSession({
+    client: redisClient,
+    secret: 'secretniyKey',
+    keyspace: 'sess:',
+    maxAge: 60*60*24,
+    algorithm: 'HS256',
+    requestKey: 'jwtSession',
+    requestArg: 'jwtToken'
+  }));
 
   app.setViewEngine('hbs');
   app.useStaticAssets(join(__dirname, '..', 'public'));
