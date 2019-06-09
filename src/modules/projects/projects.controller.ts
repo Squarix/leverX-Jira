@@ -6,7 +6,7 @@ import {
   Param,
   Post,
   Put,
-  Render,
+  Render, Req,
   UploadedFile, UseGuards,
   UseInterceptors,
   ValidationPipe
@@ -24,9 +24,10 @@ export class ProjectsController {
   constructor( private readonly projectService:ProjectsService) {}
 
   @Get('/new')
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(AuthGuard('jwt'))
   @Render('projects/views/new')
-  public async new() {
+  public async new(@Req() req) {
+    console.log(req.user.id);
     return {
       form: 'projects/views/_form'
     }
@@ -65,7 +66,7 @@ export class ProjectsController {
 
   @Delete('/:id')
   public async delete(@Param('id') id: number) {
-    return this.projectService.delete(id);
+    return await this.projectService.delete(id);
   }
 
   @Put('/:id')

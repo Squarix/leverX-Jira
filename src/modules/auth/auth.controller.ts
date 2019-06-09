@@ -5,6 +5,7 @@ import { ValidationPipe } from '../common/pipes/validation.pipe';
 import { AuthGuard } from '@nestjs/passport';
 import { callback } from './passport/local.strategy';
 import {User} from "../users/user.entity";
+import {LoginUserDto} from "../users/dto/login-user.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -24,21 +25,13 @@ export class AuthController {
   public async signIn() {}
 
   @Post('sign-in')
-  @UseGuards(AuthGuard())
   @HttpCode(HttpStatus.OK)
-  public async login(@Req() req, @Res() res) {
-    console.log(req.jwtSession.toJSON());
-    req.jwtSession.payload = {
-      user_id: req.user.id,
-      role: req.user.role
-    };
-    let claims = {
-      iss: "leverX-jira",
-      aud: "localhost:30000"
-    };
-    req.jwtSession.create(claims, function(error, token){
-      res.send({ token: token });
-    });
+  public async login(@Body(new ValidationPipe()) user: LoginUserDto, @Res() res) {
+    this.authService.logIn(user.email, user.password)
+      .then(user => Promise.resolve(this.authService.createToken(user)))
+      .then(token => res.setHeader('Authorization', 'Bearer ' + token.access_token))
+      .then( (token) => res.json(token))
+      .catch(err => console.log(err));
   }
 
 }

@@ -3,6 +3,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import {join} from "path";
 import * as bodyParser from "body-parser";
+import * as cookieParser from "cookie-parser";
 import JWTRedisSession = require("jwt-redis-session");
 import Redis = require("redis");
 
@@ -13,8 +14,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.use(bodyParser.json({limit: '10mb'}));
-  app.use (bodyParser.urlencoded({limit: '10mb', extended: true}));
-
+  app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
+  app.use(cookieParser())
 
   // redis -- jwt
   let redisClient = Redis.createClient();
