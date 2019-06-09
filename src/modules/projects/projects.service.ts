@@ -30,6 +30,17 @@ export class ProjectsService {
     return await this.projectRepository.find();
   }
 
+  public async findForUser(userId: number, projectId): Promise<Project> {
+
+    return await this.projectRepository.createQueryBuilder('project')
+      .leftJoinAndSelect('project.tasks', 'task')
+      .leftJoin('project.users', 'user', 'user.id = ' + userId)
+      .where('project.id = ' + projectId)
+      .getOne()
+      .catch(err =>
+        Promise.reject(new BadRequestException(err.toString())));
+  }
+
   public async create(project: Project) {
     return this.projectRepository.save(project)
       .then(project => Promise.resolve(project))

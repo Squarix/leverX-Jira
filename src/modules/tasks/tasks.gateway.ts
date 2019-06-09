@@ -11,6 +11,7 @@ import { TasksService } from "./tasks.service";
 import { IChangeStatus } from "./interfaces/IChangeStatus";
 import { IAddTask } from "./interfaces/IAddTask";
 import { IUpdateTask } from "./interfaces/IUpdateTask";
+import {IDeleteTask} from "./interfaces/IDeleteTask";
 
 
 @WebSocketGateway({ namespace: 'tasks' })
@@ -32,22 +33,34 @@ export class TasksGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @SubscribeMessage('changeStatus')
   onChange(socket: Socket, data: IChangeStatus) {
     this.logger.log('changingStatus: ' + data.room + data.taskId + data.newStatus);
-    this.wss.to(data.room).emit('changeStatus', {taskId:  data.taskId, status: data.newStatus});
+    this.tasksService.changeStatus(data.taskId, data.newStatus).then(
+      () =>
+    this.wss.to(data.room).emit('changeStatus', {id:  data.taskId, status: data.newStatus}));
   }
 
   @SubscribeMessage('addTask')
   onAdd(socket: Socket, task: IAddTask) {
-
+    console.log(task);
+    this.tasksService.create(task)
+      .then(newTask => {
+        console.log('here');
+        this.wss.to(task.room).emit('addTask', newTask);
+      });
   }
 
   @SubscribeMessage('deleteTask')
-  onDelete(socket: Socket, taskId: number) {
-    this.logger.log('Deleting task' + taskId);
+  onDelete(socket: Socket, data: IDeleteTask) {
+    this.tasksService.delete(data.taskId).then(
+      () => this.wss.to(data.room).emit('removeTask', data.taskId)
+    );
   }
 
   @SubscribeMessage('updateTask')
   onUpdate(socket: Socket, task: IUpdateTask) {
     this.logger.log('Updating task'+ task.id);
+    this.tasksService.update(task).then(() => {
+      this.wss.to(task.room).emit('updateTask', task)
+    });
   }
 
   handleConnection(socket: Socket): any {

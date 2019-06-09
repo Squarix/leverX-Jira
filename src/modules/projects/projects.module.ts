@@ -3,10 +3,12 @@ import { Module } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { ProjectsController } from './projects.controller';
 import {RedisModule} from "nestjs-redis";
+import {UsersService} from "../users/users.service";
+import {CryptographerService} from "../auth/cryptographer.service";
 
 
 @Module({
-  providers: [ProjectsService],
+  providers: [ProjectsService, UsersService, CryptographerService],
   controllers: [ProjectsController],
   imports: [],
   exports: []

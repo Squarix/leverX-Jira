@@ -4,4 +4,5 @@ export interface IAddTask {
   description: string;
   title: string;
   projectId: number;
+  room: string;
 }

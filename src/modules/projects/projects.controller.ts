@@ -1,8 +1,9 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpStatus,
   Param,
   Post,
   Put,
@@ -18,13 +19,15 @@ import {FileInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
 import {extname} from "path";
 import {AuthGuard} from "@nestjs/passport";
+import {UsersService} from "../users/users.service";
 
 @Controller('projects')
+@UseGuards(AuthGuard('jwt'))
 export class ProjectsController {
-  constructor( private readonly projectService:ProjectsService) {}
+  constructor( private readonly projectService:ProjectsService,
+               private readonly userService: UsersService) {}
 
   @Get('/new')
-  @UseGuards(AuthGuard('jwt'))
   @Render('projects/views/new')
   public async new(@Req() req) {
     console.log(req.user.id);
@@ -45,18 +48,23 @@ export class ProjectsController {
       }
     })
   }))
-  public async create(@UploadedFile() image, @Body(new ValidationPipe()) project: Project) {
+  public async create(@UploadedFile() image,
+                      @Body(new ValidationPipe()) project: Project,
+                      @Req() req) {
     // Upload file
-    // project.owner = current_user;
+    project.owner = await this.userService.findOne({id: req.user.id});
     return this.projectService.create(project);
   }
 
 
   @Get('/:id')
   @Render('projects/views/show')
-  public async show(@Param('id') id: number) {
-    await this.projectService.sendMail();
-    let project:Project = await this.projectService.findOne({id: id});
+  public async show(@Param('id') id: number, @Req() req) {
+    //await this.projectService.sendMail();
+    let project:Project = await this.projectService.findForUser(req.user.id, id);
+    if (!project)
+      throw new BadRequestException('You picked the wrong house fool');
+    console.log(project);
     return { project: project,
       openTasks: project.tasks.filter(t => t.status == Status.Open),
       pendingTasks: project.tasks.filter(t => t.status == Status.Active),

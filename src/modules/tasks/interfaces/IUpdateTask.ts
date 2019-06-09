@@ -3,4 +3,5 @@ export interface IUpdateTask {
   projectId: number;
   title: string;
   description: string;
+  room: string
 }
