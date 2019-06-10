@@ -1,5 +1,9 @@
 {{>header}}
 <h2>{{ task.title }} <span class="badge badge-info">{{task.status}}</span></h2>
 <p>Description: {{ task.description }}</p>
-<textarea>Comments</textarea>
+<hr />
+<div class="p-5">
+    <h3>Comments</h3>
+    <textarea class="form-control" rows="3" id="comment">Comments</textarea>
+</div>
 {{>footer}}

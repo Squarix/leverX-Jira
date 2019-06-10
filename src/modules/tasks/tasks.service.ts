@@ -4,11 +4,13 @@ import {Injectable} from "@nestjs/common";
 import {IAddTask} from "./interfaces/IAddTask";
 import {ProjectsService} from "../projects/projects.service";
 import {IUpdateTask} from "./interfaces/IUpdateTask";
+import {SearchService} from "../search/search.service";
 
 @Injectable()
 export class TasksService {
   constructor(private readonly connection: Connection,
-              private readonly projectService: ProjectsService) {}
+              private readonly projectService: ProjectsService,
+              private readonly searchService: SearchService) {}
 
   private readonly taskRepository = this.connection.getRepository(Task);
 
@@ -35,10 +37,13 @@ export class TasksService {
     newTask.description = task.description;
     newTask.project = await this.projectService.findOne({id: task.projectId});
     newTask.title = task.title;
+    this.searchService.taskIndex(newTask);
     return await this.taskRepository.save(newTask);
   }
 
   public async update(task: IUpdateTask) {
+    await this.searchService.countIndex('tasks', 'task');
+    await this.searchService.searchTasks();
     return await this.taskRepository.createQueryBuilder().update('Task').where({ id: task.id })
       .set({title: task.title, description: task.description});
   }

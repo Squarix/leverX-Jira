@@ -22,7 +22,7 @@ export class TasksController {
 
   @Put('/:id')
   async update() {
-
+    this.taskService.update(await this.taskService.findOne(1));
   }
 
 

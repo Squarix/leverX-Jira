@@ -26,4 +26,6 @@ export class Comment {
   @Column()
   commentableId: number;
 
+  comments: Comment[] | null;
+
 }

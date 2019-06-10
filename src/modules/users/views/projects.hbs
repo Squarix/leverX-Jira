@@ -1,4 +1,5 @@
 {{> header }}
+<h1>sad{{ owner }}</h1>
 {{#each projects as |project| }}
     <div class="media text-muted pt-3">
         <img data-src="{{image}}" alt="32x32" class="mr-2 rounded" data-holder-rendered="true" style="width: 32px; height: 32px;">
@@ -8,9 +9,7 @@
             </strong>
             Тут типо дескриптион
         </p>
+        <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
     </div>
-    {{#if this.owner}}
-        <div>BUTTTONS</div>
-    {{/if}}
 {{/each}}
 {{> footer}}
