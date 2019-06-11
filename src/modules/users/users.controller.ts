@@ -21,16 +21,34 @@ export class UsersController {
 
   @Get('/:id')
   async findOne(@Param('id') id): Promise<User> {
-    return this.userService.findOne({_id: id})
+    return this.userService.findOne({id: id})
   }
 
   @Put('/:id')
+  @UseGuards(AuthGuard('jwt'))
   async update(@Param('id') id, @Body(new ValidationPipe()) payload:LoginUserDto) {
     return this.userService.update(id, payload)
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard('jwt'))
   async delete(@Param('id') id) {
-    return this.userService.delete({_id: id})
+    return this.userService.delete({id  : id})
   }
+
+
+  @Get('/projects/my')
+  @UseGuards(AuthGuard('jwt'))
+  @Render('users/views/projects')
+  async projects(@Req() req) {
+    return { projects: await this.userService.myProjects(req.user.id) };
+  }
+
+  @Get('/projects/own')
+  @UseGuards(AuthGuard('jwt'))
+  @Render('users/views/projects')
+  async ownProjects(@Req() req) {
+    return { projects: await this.userService.ownerProjects(req.user.id), owner: true};
+  }
+
 }

@@ -4,7 +4,7 @@ import { User } from "../users/user.entity";
 import { Project } from "../projects/project.entity";
 import { Comment} from "../comments/comment.entity";
 
-enum Status {
+export enum Status {
   Open = 'open',
   Closed = 'closed',
   Active = 'active'
@@ -26,12 +26,12 @@ export class Task {
   @Column()
   status: Status;
 
-  @OneToMany(type => Comment, comment => comment.user)
-  comments: Comment[];
-
   @ManyToOne(type => User, user => user.tasks)
   user: User;
 
   @ManyToOne(type => Project, project => project.tasks)
   project: Project;
+
+  @OneToMany(type => Comment, comment => comment.task)
+  comments: Comment[];
 }

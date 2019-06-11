@@ -16,6 +16,7 @@ export class Project {
   image: string;
 
   @ManyToOne(type => User, user => user.ownProjects)
+  @JoinTable()
   owner: User;
 
   @OneToMany(type => Task, task => task.project)

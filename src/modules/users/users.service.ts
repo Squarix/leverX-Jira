@@ -37,7 +37,7 @@ export class UsersService {
   }
 
   public async update(id: string, payload: LoginUserDto) {
-    return await this.findOne({_id: id })
+    return await this.findOne({id: id })
       .then(
         async user => {
           user.email = payload.email;
@@ -64,5 +64,19 @@ export class UsersService {
           .then(() => Promise.resolve({message: 'user has been deleted'})
           )
       )
+  }
+
+  public async myProjects(id: number): Promise<any> {
+    return await this.userRepository.findOne({ where: {id: id}, relations: ['projects', 'ownProjects']})
+      .then(user => {
+        return Promise.resolve(Object.assign(user.projects, user.ownProjects))
+      });
+  }
+
+  public async ownerProjects(id: number): Promise<any> {
+    return await this.userRepository.findOne({ where: {id: id}, relations: ['ownProjects'] })
+      .then(user => {
+        return Promise.resolve(user.ownProjects)
+      });
   }
 }

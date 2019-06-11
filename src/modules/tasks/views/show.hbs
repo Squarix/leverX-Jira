@@ -1,0 +1,20 @@
+{{>header}}
+<h2>{{ task.title }} <span class="badge badge-info">{{task.status}}</span></h2>
+<p>Description: {{ task.description }}</p>
+<hr />
+<div class="p-5">
+    <h3>Comments</h3>
+    <form action="/comments/" method="post">
+        <textarea class="form-control" name="body" rows="3" id="comment">Comments</textarea>
+        <input type="hidden" name="commentableId" value="{{task.id}}" />
+        <input type="hidden" name="commentableType" value="task" />
+        <button type="submit" class="btn btn-sm btn-primary" >Post</button>
+    </form>
+</div>
+<div class="p-5">
+    {{#each task.comments as |comment| }}
+        <h5>{{ comment.user.name }}</h5>
+        <p>{{ comment.body }}</p>
+    {{/each}}
+</div>
+{{>footer}}

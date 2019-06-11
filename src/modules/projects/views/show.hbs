@@ -1,0 +1,71 @@
+{{> header}}
+<h3>{{ project.name }}</h3>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">Open</div>
+            <ul class="list-group list-group-flush" id="openList">
+                {{#each openTasks as |task|}}
+                <li class="list-group-item" id="task-{{task.id}}">
+                    <a href="/tasks/{{task.id}}">{{ task.title }}</a>
+                    <br>
+                    <button onclick="changeStatus('{{task.id}}', 'active')" class="btn btn-primary btn-sm">To Active</button>
+                    <button onclick="deleteTask({{task.id}})" class="btn btn-danger btn-sm">Delete</button>
+                    <button onclick="showUpdateForm({{task.id}})" class="btn btn-secondary btn-sm">Update</button>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">In progress</div>
+            <ul class="list-group list-group-flush" id="activeList">
+                {{#each pendingTasks as |task|}}
+                    <li class="list-group-item" id="task-{{task.id}}">
+                        <a href="/tasks/{{task.id}}">{{ task.title }}</a>
+                        <br>
+                        <button onclick="changeStatus('{{task.id}}', 'closed')" class="btn btn-primary btn-sm">Close</button>
+                        <button onclick="deleteTask({{task.id}})" class="btn btn-danger btn-sm">Delete</button>
+                        <button onclick="showUpdateForm({{task.id}})" class="btn btn-secondary btn-sm">Update</button>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">Finished</div>
+            <ul class="list-group list-group-flush" id="closedList">
+                {{#each closedTasks as |task|}}
+                    <li class="list-group-item" id="task-{{task.id}}">
+                        <a href="/tasks/{{task.id}}">{{ task.title }}</a>
+                        <br>
+                        <button onclick="deleteTask({{task.id}})" class="btn btn-danger btn-sm">Delete</button>
+                        <button onclick="showUpdateForm({{task.id}})" class="btn btn-secondary btn-sm">Update</button>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    <button id="addTask" class="btn btn-outline-secondary mt-5">Add Task</button>
+    <div class="col-md-12 mt-5" id="taskForm">
+        <form id="formPrevent">
+            <div class="form-group">
+                <label for="title">Task title:</label>
+                <input id="title" class="form-control" name="title" placeholder="Name your task">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea name="description" class="form-control" rows="3" id="description"></textarea>
+            </div>
+            <input type="hidden" id="form-projectId" name="projectId">
+            <input type="hidden" id="form-id" name="id">
+            <button class="btn btn-primary" id="taskButton">Submit</button>
+        </form>
+    </div>
+</div>
+<input type="hidden" value="{{project.id}}" id="projectId" />
+<script src="/js/tasks.js"></script>
+{{> footer}}
