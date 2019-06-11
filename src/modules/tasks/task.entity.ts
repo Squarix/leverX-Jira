@@ -31,4 +31,7 @@ export class Task {
 
   @ManyToOne(type => Project, project => project.tasks)
   project: Project;
+
+  @OneToMany(type => Comment, comment => comment.task)
+  comments: Comment[];
 }

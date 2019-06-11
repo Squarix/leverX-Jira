@@ -3,18 +3,20 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import {join} from "path";
 import * as bodyParser from "body-parser";
+import * as cookieParser from "cookie-parser";
 import JWTRedisSession = require("jwt-redis-session");
 import Redis = require("redis");
-
-"redis";
 import * as hbs from "hbs";
+import {AllExceptionsFilter} from "./filtres/all-exceptions.filter";
+import {HttpAdapterHost} from "@nestjs/common";
+import {HttpExceptionFilter} from "./filtres/http-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.use(bodyParser.json({limit: '10mb'}));
-  app.use (bodyParser.urlencoded({limit: '10mb', extended: true}));
-
+  app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
+  app.use(cookieParser())
 
   // redis -- jwt
   let redisClient = Redis.createClient();
@@ -32,7 +34,10 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, 'modules'));
 
+
   hbs.registerPartials(join(__dirname, '..', 'views', 'layouts'));
+
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(3000);
 

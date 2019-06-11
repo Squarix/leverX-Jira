@@ -6,12 +6,14 @@ import { Role, Status } from '../users/enum';
 import { CryptographerService } from './cryptographer.service';
 import {User} from "../users/user.entity";
 import {CreateUserDto} from "../users/dto/create-user.dto";
+import {JwtService} from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
 
   constructor(
     private readonly cryptoService: CryptographerService,
+    private readonly jwtService: JwtService,
     private readonly userService: UsersService
   ){}
   
@@ -39,7 +41,7 @@ export class AuthService {
   }
   
   public async verify(payload) {
-    return await this.userService.findOne({id: payload.sub})
+    return await this.userService.findOne({id: payload.id})
     .then(signedUser => Promise.resolve(signedUser))
     .catch(err => Promise.reject(new UnauthorizedException("Invalid Authorization")))
   }
@@ -47,11 +49,12 @@ export class AuthService {
   public async createToken(signedUser) {
     const expiresIn = 60*60*24*62, secretOrKey = 'privetYaSecretKeyNaJire';
     const user = { 
-      sub: signedUser._id,
+      id: signedUser.id,
       email: signedUser.email,
       role: signedUser.role,
       status: signedUser.status
     };
+    console.log('I am here');
     return {
       expires_in: expiresIn,
       access_token: await sign(user, secretOrKey, { expiresIn })

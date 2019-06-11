@@ -1,16 +1,15 @@
 {{> header }}
+<h1>Projects:</h1>
 {{#each projects as |project| }}
     <div class="media text-muted pt-3">
-        <img data-src="{{image}}" alt="32x32" class="mr-2 rounded" data-holder-rendered="true" style="width: 32px; height: 32px;">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsgKWaWvMfgSmQjJBETlectexGQ4qM_Yf4eiP44iWKUqBASfGvUA" alt="32x32" class="mr-2 rounded" data-holder-rendered="true" style="width: 32px; height: 32px;">
         <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">
                 <a href="/projects/{{project.id}}"> {{ project.name }} </a>
             </strong>
             Тут типо дескриптион
         </p>
+        <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
     </div>
-    {{#if this.owner}}
-        <div>BUTTTONS</div>
-    {{/if}}
 {{/each}}
 {{> footer}}

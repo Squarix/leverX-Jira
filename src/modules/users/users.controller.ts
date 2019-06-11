@@ -25,27 +25,30 @@ export class UsersController {
   }
 
   @Put('/:id')
+  @UseGuards(AuthGuard('jwt'))
   async update(@Param('id') id, @Body(new ValidationPipe()) payload:LoginUserDto) {
     return this.userService.update(id, payload)
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard('jwt'))
   async delete(@Param('id') id) {
     return this.userService.delete({id  : id})
   }
 
-  @Get('/:id/projects')
+
+  @Get('/projects/my')
+  @UseGuards(AuthGuard('jwt'))
   @Render('users/views/projects')
-  async projects() {
-    let user_id = 7;
-    return { projects: await this.userService.myProjects(user_id) };
+  async projects(@Req() req) {
+    return { projects: await this.userService.myProjects(req.user.id) };
   }
 
-  @Get('/:id/own-projects')
+  @Get('/projects/own')
+  @UseGuards(AuthGuard('jwt'))
   @Render('users/views/projects')
-  async ownProjects() {
-    let uid = 7;
-    return { projects: await this.userService.ownerProjects(uid), owner: true};
+  async ownProjects(@Req() req) {
+    return { projects: await this.userService.ownerProjects(req.user.id), owner: true};
   }
 
 }

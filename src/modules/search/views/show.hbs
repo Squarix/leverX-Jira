@@ -1,0 +1,23 @@
+{{>header}}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" id="project-tab" data-toggle="tab" href="#project" role="tab" aria-controls="project" aria-selected="true">Projects</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" id="task-tab" data-toggle="tab" href="#task" role="tab" aria-controls="task" aria-selected="false">Tasks</a>
+    </li>
+</ul>
+<div class="tab-content m-5" id="myTabContent">
+    <div class="tab-pane fade" id="project" role="tabpanel" aria-labelledby="project-tab">
+        {{#each projects as |project|}}
+            <h4><a href="/projects/{{project.id}}"{{project.name}}</h4>
+        {{/each}}
+    </div>
+    <div class="tab-pane fade show active" id="task" role="tabpanel" aria-labelledby="task-tab">
+        {{#each tasks as |task| }}
+            <h4><a href="/tasks/{{task.id}}">{{task.title}}</a> <span class="badge badge-info">{{task.status}}</span></h4>
+            <p>{{task.description}}</p>
+        {{/each}}
+    </div>
+</div>
+{{>footer}}

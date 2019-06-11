@@ -67,9 +67,9 @@ export class UsersService {
   }
 
   public async myProjects(id: number): Promise<any> {
-    return await this.userRepository.findOne({ where: {id: id}, relations: ['projects']})
+    return await this.userRepository.findOne({ where: {id: id}, relations: ['projects', 'ownProjects']})
       .then(user => {
-        return Promise.resolve(user.projects)
+        return Promise.resolve(Object.assign(user.projects, user.ownProjects))
       });
   }
 

@@ -8,13 +8,14 @@ import { AuthModule } from "./modules/auth/auth.module";
 import { ProjectsModule } from "./modules/projects/projects.module";
 import { TasksModule } from "./modules/tasks/tasks.module";
 import { HandlebarsAdapter, MailerModule } from "@nest-modules/mailer";
-import {join} from "path";
-import {RedisModule} from "nestjs-redis";
+import { join } from "path";
+import {SearchModule} from "./modules/search/search.module";
+import {CommentsModule} from "./modules/comments/comments.module";
 
 
 @Module({
   imports: [
-    AuthModule, UsersModule, ProjectsModule, TasksModule,
+    AuthModule, UsersModule, ProjectsModule, TasksModule, SearchModule, CommentsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -38,7 +39,6 @@ import {RedisModule} from "nestjs-redis";
         },
       },
     }),
-    RedisModule.register({})
   ],
   controllers: [AppController],
   providers: [AppService],
