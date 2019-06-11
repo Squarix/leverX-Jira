@@ -1,23 +1,15 @@
 import {Injectable, Logger} from "@nestjs/common";
 import {ElasticsearchService} from "@nestjs/elasticsearch";
 import {Task} from "../tasks/task.entity";
-import {start} from "repl";
-import {response} from "express";
 import {Project} from "../projects/project.entity";
 import Any = jasmine.Any;
 
 @Injectable()
 export class SearchService {
-  constructor(private readonly elasticService:ElasticsearchService) {}
+  constructor(private readonly elasticService: ElasticsearchService) {
+  }
 
   private readonly logger = new Logger();
-
-  public async ping() {
-    this.elasticService.ping({
-      requestTimeout: 3000
-    });
-    this.elasticService.bulk({})
-  }
 
   public async taskIndex(task: Task) {
     let bulk = this.bulk('tasks', 'task', task);
@@ -45,23 +37,75 @@ export class SearchService {
   }
 
   public async countIndex(indexName: string, type: string) {
-    this.logger.log(this.elasticService.count({ index: indexName, type: type}));
+    this.logger.log(this.elasticService.count({index: indexName, type: type}));
   }
 
-  public async searchTasks() {
-    let response = this.elasticService.search({
+  public async searchProjects(query: string) {
+    let result = [];
+    let byName = this.elasticService.search({
+      index: 'projects',
+      type: 'project',
+      body: {
+        query: {
+          match: {name: query}
+        }
+      }
+    });
+    await byName.forEach((res) => {
+      res[0].hits.hits.forEach((hit) => {
+        result.push(hit._source);
+      });
+    });
+
+    return this.getUnique(result, 'id');
+  }
+
+  public async searchTasks(query: string) {
+    let result = [];
+    let byDescription = this.elasticService.search({
       index: 'tasks',
       type: 'task',
       body: {
         query: {
-          match: { description: 'Помогите сделать матешу' }
+          match: {description: query}
         }
       }
     });
-    response.forEach((res) => {
+    await byDescription.forEach((res) => {
       res[0].hits.hits.forEach((hit) => {
-        this.logger.log(hit);
+        result.push(hit._source);
       });
     });
+    let byTitle = this.elasticService.search({
+      index: 'tasks',
+      type: 'task',
+      body: {
+        query: {
+          match: {title: query}
+        }
+      }
+    });
+    await byTitle.forEach((res) => {
+      res[0].hits.hits.forEach((hit) => {
+        result.push(hit._source);
+      });
+    });
+
+    return this.getUnique(result, 'id');
+  }
+
+
+  private getUnique(arr, comp): Array<any> {
+
+    const unique = arr
+      .map(e => e[comp])
+
+      // store the keys of the unique objects
+      .map((e, i, final) => final.indexOf(e) === i && i)
+
+      // eliminate the dead keys & store unique objects
+      .filter(e => arr[e]).map(e => arr[e]);
+
+    return unique;
   }
 }

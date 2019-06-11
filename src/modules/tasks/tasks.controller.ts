@@ -7,6 +7,7 @@ export class TasksController {
   @Get('/:id')
   @Render('tasks/views/show')
   async show(@Param('id') id: number) {
+    console.log(await this.taskService.findOne(id));
     return {task: await this.taskService.findOne(id)};
   }
 

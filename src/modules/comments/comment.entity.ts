@@ -17,15 +17,11 @@ export class Comment {
   @Column()
   body: string;
 
+
   @ManyToOne(type => User, user => user.comments)
   user: User;
-  
-  @Column()
-  commentableType: string;
-  
-  @Column()
-  commentableId: number;
 
-  comments: Comment[] | null;
+  @ManyToOne(type => Task, task => task.comments)
+  task: Task;
 
 }

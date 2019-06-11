@@ -8,8 +8,7 @@ import {RedisClient} from "nestjs-redis/dist/redis-client.provider";
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly connection: Connection,
-              private readonly mailerService: MailerService) {}
+  constructor(private readonly connection: Connection) {}
 
   private readonly projectRepository = this.connection.getRepository(Project);
   private readonly userRepository = this.connection.getRepository(User);
@@ -36,9 +35,7 @@ export class ProjectsService {
       .leftJoinAndSelect('project.tasks', 'task')
       .leftJoin('project.users', 'user', 'user.id = ' + userId)
       .where('project.id = ' + projectId)
-      .getOne()
-      .catch(err =>
-        Promise.reject(new BadRequestException(err.toString())));
+      .getOne();
   }
 
   public async create(project: Project) {
@@ -58,32 +55,4 @@ export class ProjectsService {
     return await this.projectRepository.delete({ id: id});
   }
 
-  public async sendMail() {
-//    let client = this.redisService.getClient();
-
-  //  this.redisService.getClient('new');
-
-    //client.hset('hkey', 'ht1', 123);
-    //client.hset('hkey', 'ht2', 321);
-
-    //client.hkeys('hkey', (err, replies) => {
-      //console.log(replies.length + " replies:");
-      //replies.forEach(function (reply, i) {
-       // console.log("    " + i + ": " + reply + reply.value);
-      //});
-      //client.quit();
-    //});
-
-
-    /*this
-      .mailerService
-      .sendMail({
-        to: 'vlas2305@gmail.com', // sender address
-        subject: 'Testing Nest MailerModule ✔', // Subject line
-        text: 'welcome', // plaintext body
-        html: '<b>welcome</b>', // HTML body content
-      })
-      .then((res) => { this.logger.log(res) })
-      .catch((err) => { this.logger.log(err) });*/
-  }
 }

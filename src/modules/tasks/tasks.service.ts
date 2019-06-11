@@ -1,21 +1,24 @@
 import {Connection} from "typeorm";
 import {Status, Task} from "./task.entity";
-import {Injectable} from "@nestjs/common";
+import {Injectable, Logger, UseGuards} from "@nestjs/common";
 import {IAddTask} from "./interfaces/IAddTask";
 import {ProjectsService} from "../projects/projects.service";
 import {IUpdateTask} from "./interfaces/IUpdateTask";
 import {SearchService} from "../search/search.service";
+import {AuthGuard} from "@nestjs/passport";
 
 @Injectable()
+@UseGuards(AuthGuard('jwt'))
 export class TasksService {
   constructor(private readonly connection: Connection,
               private readonly projectService: ProjectsService,
               private readonly searchService: SearchService) {}
 
   private readonly taskRepository = this.connection.getRepository(Task);
+  private readonly logger = new Logger();
 
   public async findOne(id: number): Promise<any> {
-    return await this.taskRepository.findOne(id);
+    return await this.taskRepository.findOne({id: id}, { relations: ['comments', 'user', 'comments.user']})
   }
 
   public async changeStatus(id: number, newStatus: Status) {
@@ -37,13 +40,16 @@ export class TasksService {
     newTask.description = task.description;
     newTask.project = await this.projectService.findOne({id: task.projectId});
     newTask.title = task.title;
-    this.searchService.taskIndex(newTask);
-    return await this.taskRepository.save(newTask);
+
+    await this.taskRepository.save(newTask)
+      .then(task => this.searchService.taskIndex(task))
+      .catch(err => this.logger.log(err));
+    return newTask;
   }
 
+
+
   public async update(task: IUpdateTask) {
-    await this.searchService.countIndex('tasks', 'task');
-    await this.searchService.searchTasks();
     return await this.taskRepository.createQueryBuilder().update('Task').where({ id: task.id })
       .set({title: task.title, description: task.description});
   }
