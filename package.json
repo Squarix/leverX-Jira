@@ -49,7 +49,7 @@
     "passport-local": "^1.0.0",
     "pg": "^7.11.0",
     "postgresql": "0.0.1",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
     "rxjs": "^6.3.3",
